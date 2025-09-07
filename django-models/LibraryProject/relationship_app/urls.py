@@ -6,6 +6,9 @@ from . import views
 urlpatterns = [
     path("", views.home_view, name="home"),
     path("books/", views.list_books, name="list_books"),
+    ath("books/add/", views.add_book, name="add_book"),
+    path("books/edit/<int:book_id>/", views.edit_book, name="edit_book"),
+    path("books/delete/<int:book_id>/", views.delete_book, name="delete_book"),
     path("library/<int:pk>/", views.LibraryDetailView.as_view(), name="library_detail"),
     path("register/", views.register_view, name="register"),  # keep custom registration
     path("login/", LoginView.as_view(template_name="relationship_app/login.html"), name="login"),
