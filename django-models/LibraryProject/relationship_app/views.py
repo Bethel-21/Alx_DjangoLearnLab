@@ -12,8 +12,7 @@ def list_books(request):
     
     # Plain text output (or switch to template if you prefer)
     output = "\n".join([f"{book.title} by {book.author.name}" for book in books])
-    return HttpResponse(output, content_type="text/plain")
-
+    return render(request, "relationship_app/list_books.html", {"books": books})
     # Optional template version:
     # return render(request, "list_books.html", {"books": books})
 
@@ -23,6 +22,6 @@ def list_books(request):
 # ---------------------------
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = "library_detail.html"  # uses your template
-    context_object_name = "library"        # name in template
+    template_name = "relationship_app/library_detail.html"
+    context_object_name = "library"
 
