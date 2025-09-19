@@ -135,3 +135,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Cookies security
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+
+# Security settings
+SECURE_SSL_REDIRECT = True
