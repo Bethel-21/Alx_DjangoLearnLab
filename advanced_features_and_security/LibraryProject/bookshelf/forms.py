@@ -1,9 +1,6 @@
-
-
+# LibraryProject/bookshelf/forms.py
 from django import forms
-from .models import Book
 
-class BookForm(forms.ModelForm):
-    class Meta:
-        model = Book
-        fields = ['title', 'author', 'published_date', 'isbn', 'pages']
+class ExampleForm(forms.Form):
+    # Add at least one field so it’s a valid form
+    name = forms.CharField(max_length=100)
