@@ -5,3 +5,11 @@ from .serializers import BookSerializer
 class BookList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    """
+    A ViewSet for viewing and editing Book instances.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
