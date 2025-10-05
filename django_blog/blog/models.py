@@ -23,3 +23,28 @@ class Post(models.Model):
     def get_absolute_url(self):
         # returns the canonical URL for a post instance
         return reverse('post_detail', args=[str(self.id)])
+
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        'Post',
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )  # many comments -> one post
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )  # who wrote the comment
+
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['created_at']  # oldest first; change to '-created_at' for newest first
+
+    def __str__(self):
+        return f'Comment by {self.author} on {self.post}'
