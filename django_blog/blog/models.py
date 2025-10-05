@@ -48,3 +48,22 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+
+
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+# In your existing Post model add:
+class Post(models.Model):
+    # ... existing fields: title, content, author, published_date, etc.
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
+
+    # rest of Post (methods, Meta, etc.)
