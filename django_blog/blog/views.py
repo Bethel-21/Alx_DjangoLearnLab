@@ -208,3 +208,21 @@ def search_view(request):
             Q(tags__name__icontains=q)
         ).distinct().order_by('-published_date')
     return render(request, 'blog/search_results.html', {'query': q, 'posts': posts})
+
+
+
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        self.tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[self.tag]).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
+        return context
