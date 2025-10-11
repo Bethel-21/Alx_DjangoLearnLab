@@ -2,6 +2,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from .models import Like
+
 
 User = get_user_model()
 
@@ -34,3 +36,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User  # your custom user model
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']

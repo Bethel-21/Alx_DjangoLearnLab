@@ -1,10 +1,10 @@
-from rest_framework import viewsets, permissions, filters
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from rest_framework import viewsets, permissions, filters, status
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
+from django.shortcuts import get_object_or_404
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -47,3 +47,29 @@ class FeedView(APIView):
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+
+
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = LikeSerializer
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        # Check if the user already liked this post
+        if Like.objects.filter(post=post, user=request.user).exists():
+            return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        like = Like.objects.create(post=post, user=request.user)
+        serializer = self.get_serializer(like)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        like = Like.objects.filter(post=post, user=request.user).first()
+        if like:
+            like.delete()
+            return Response({"detail": "Like removed."}, status=status.HTTP_200_OK)
+        return Response({"detail": "You haven't liked this post."}, status=status.HTTP_400_BAD_REQUEST)
